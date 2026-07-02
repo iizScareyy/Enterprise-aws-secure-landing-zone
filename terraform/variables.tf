@@ -21,3 +21,21 @@ variable "key_name" {
   type        = string
   default     = "enterprise-key"
 }
+
+variable "db_name" {
+  description = "Initial database name"
+  type        = string
+  default     = "enterprise"
+}
+
+variable "db_username" {
+  description = "Database administrator username"
+  type        = string
+  default     = "postgres"
+}
+
+variable "db_password" {
+  description = "Database administrator password"
+  type        = string
+  sensitive   = true
+}

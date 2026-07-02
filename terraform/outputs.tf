@@ -56,3 +56,15 @@ output "launch_template_id" {
 output "autoscaling_group_name" {
   value = aws_autoscaling_group.app_asg.name
 }
+
+output "db_endpoint" {
+  value = aws_db_instance.postgres.endpoint
+}
+
+output "db_port" {
+  value = aws_db_instance.postgres.port
+}
+
+output "db_name" {
+  value = aws_db_instance.postgres.db_name
+}
