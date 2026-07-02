@@ -1,91 +1,146 @@
-# Enterprise AWS Secure Landing Zone using Terraform
+# Enterprise AWS Secure Landing Zone
 
-## Overview
+A production-inspired AWS infrastructure built with Terraform following Infrastructure as Code (IaC) best practices.
 
-This project demonstrates the design and deployment of a secure, production-style AWS environment using Terraform. The infrastructure follows Infrastructure as Code (IaC) principles and incorporates AWS security best practices, including network isolation, least-privilege access, centralized logging, and encryption.
+This project provisions a secure and scalable AWS environment featuring private networking, load balancing, auto scaling, monitoring, and a PostgreSQL database.
 
-The project is being built incrementally to simulate a real-world enterprise cloud deployment.
+![Terraform](https://img.shields.io/badge/Terraform-1.13+-623CE4?logo=terraform)
+![AWS](https://img.shields.io/badge/AWS-Cloud-orange?logo=amazonaws)
+![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI-blue?logo=githubactions)
+![License](https://img.shields.io/badge/License-MIT-green)
 
----
+## Project Overview
+
+This project demonstrates the deployment of a secure and scalable AWS infrastructure using Terraform.
+
+The architecture follows Infrastructure as Code (IaC) principles and incorporates networking, compute, load balancing, auto scaling, monitoring, IAM, and managed database services while following AWS best practices.
+
+## Features
+
+- Custom VPC with Public and Private Subnets
+- Internet Gateway and NAT Gateway
+- Secure Security Groups
+- EC2 Launch Template
+- Application Load Balancer (ALB)
+- Auto Scaling Group
+- CloudWatch Scaling Policies
+- PostgreSQL RDS Database
+- IAM Roles and Instance Profiles
+- GitHub Actions CI Pipeline
+- Infrastructure as Code using Terraform
+
 
 ## Architecture
 
-> Architecture diagram will be added upon project completion.
-
----
+![AWS Architecture](pics/architecture.png)
 
 ## AWS Services Used
 
 - Amazon VPC
-- Public & Private Subnets
+- Amazon EC2
+- Application Load Balancer
+- Auto Scaling Group
+- Amazon RDS PostgreSQL
+- CloudWatch
+- IAM
 - Internet Gateway
 - NAT Gateway
-- Route Tables
-- AWS IAM *(In Progress)*
-- EC2 *(Planned)*
-- Application Load Balancer *(Planned)*
-- Auto Scaling *(Planned)*
-- Amazon RDS *(Planned)*
-- Amazon S3 *(Planned)*
-- AWS KMS *(Planned)*
-- AWS CloudTrail *(Planned)*
-- Amazon CloudWatch *(Planned)*
+- Security Groups
+- Terraform
+- GitHub Actions
 
----
+## CI/CD Pipeline
+
+This project uses GitHub Actions to automatically validate Terraform code on every push and pull request.
+
+The pipeline performs:
+
+- Terraform Format Check (`terraform fmt -check`)
+- Terraform Initialization (`terraform init`)
+- Terraform Validation (`terraform validate`)
+- Terraform Execution Plan (`terraform plan`)
+
+This ensures infrastructure changes are validated before deployment.
+
 
 ## Project Structure
 
+```text
+Enterprise-aws-secure-landing-zone
+│
+├── .github/
+│   └── workflows/
+│       └── terraform.yml
+│
+├── keys/
+│
+├── terraform/
+│   ├── alb.tf
+│   ├── autoscaling.tf
+│   ├── cloudwatch.tf
+│   ├── db.tf
+│   ├── ec2.tf
+│   ├── iam.tf
+│   ├── networking.tf
+│   ├── outputs.tf
+│   ├── provider.tf
+│   ├── security_groups.tf
+│   ├── variables.tf
+│   └── ...
+│
+└── README.md
 ```
-terraform/
-│── provider.tf
-│── versions.tf
-│── outputs.tf
-│── vpc.tf
-│── subnets.tf
-│── internet_gateway.tf
-│── route_tables.tf
-│── private_route_table.tf
-│── nat_gateway.tf
 
-docs/
-diagrams/
+
+## Deployment
+
+Clone the repository
+
+```bash
+git clone https://github.com/iizScareyy/Enterprise-aws-secure-landing-zone.git
+
+Navigate to Terraform directory
+
+```bash
+cd terraform
 ```
 
----
+Initialize Terraform
 
-## Current Progress
+```bash
+terraform init
+```
 
-- [x] Terraform project initialization
-- [x] AWS Provider configuration
-- [x] VPC creation
-- [x] Public Subnets
-- [x] Private Subnets
-- [x] Internet Gateway
-- [x] Public Route Table
-- [x] NAT Gateway
-- [x] Private Route Table
-- [ ] Security Groups
-- [ ] IAM Roles & Policies
-- [ ] EC2
-- [ ] Application Load Balancer
-- [ ] Auto Scaling
-- [ ] RDS
-- [ ] CloudTrail
-- [ ] CloudWatch
-- [ ] KMS
-- [ ] S3
+Validate configuration
 
----
+```bash
+terraform validate
+```
 
-## Technologies
+Review execution plan
 
-- Terraform
-- AWS
-- Git
-- GitHub
+```bash
+terraform plan
+```
 
----
+Deploy infrastructure
+
+```bash
+terraform apply
+```
+
+
+## Cleanup
+
+Destroy all infrastructure
+
+```bash
+terraform destroy
+```
 
 ## Author
 
-Shraddha Nakil
+**Shraddha**
+
+- AWS Certified Solutions Architect – Associate (SAA-C03)
+- GitHub: https://github.com/iizScareyy
