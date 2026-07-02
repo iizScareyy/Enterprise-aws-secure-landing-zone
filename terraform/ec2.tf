@@ -25,7 +25,7 @@ data "aws_ami" "amazon_linux" {
 
 resource "aws_key_pair" "enterprise_key" {
   key_name   = var.key_name
-  public_key = file("C:/Users/Scareyy/.ssh/id_ed25519.pub")
+  public_key = file("${path.module}/../keys/id_ed25519.pub")
 
 }
 
