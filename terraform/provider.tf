@@ -1,12 +1,7 @@
 provider "aws" {
-  region = "ap-south-1"
+  region = var.aws_region
 
   default_tags {
-    tags = {
-      Project     = "Enterprise AWS Secure Landing Zone"
-      Environment = "Development"
-      ManagedBy   = "Terraform"
-      Owner       = "Shraddha"
-    }
+    tags = local.common_tags
   }
 }
