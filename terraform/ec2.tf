@@ -34,10 +34,10 @@ resource "aws_key_pair" "enterprise_key" {
 
 resource "aws_instance" "app_server" {
 
-  ami                    = data.aws_ami.amazon_linux.id
-  instance_type          = var.instance_type
+  ami           = data.aws_ami.amazon_linux.id
+  instance_type = var.instance_type
 
-  subnet_id              = aws_subnet.private_subnet_a.id
+  subnet_id = aws_subnet.private_subnet_a.id
 
   vpc_security_group_ids = [
     aws_security_group.app_sg.id
@@ -56,8 +56,8 @@ resource "aws_instance" "app_server" {
   }
 
   metadata_options {
-  http_endpoint = "enabled"
-  http_tokens   = "required"
-}
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
 
 }
