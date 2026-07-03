@@ -8,10 +8,10 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 
-# Keep this tracked
+
 !.terraform.lock.hcl
 
-# Don't commit local variables (may contain secrets)
+
 *.tfvars
 *.tfvars.json
 
