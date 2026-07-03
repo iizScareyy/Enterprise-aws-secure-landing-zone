@@ -2,30 +2,38 @@
 
 A production-inspired AWS infrastructure built with Terraform following Infrastructure as Code (IaC) best practices.
 
-This project provisions a secure and scalable AWS environment featuring private networking, load balancing, auto scaling, monitoring, and a PostgreSQL database.
+This project provisions a production-inspired AWS infrastructure featuring secure networking, load balancing, auto scaling, monitoring, AWS WAF protection, remote Terraform state management, and a PostgreSQL database using Infrastructure as Code (Terraform).
 
 ![Terraform](https://img.shields.io/badge/Terraform-1.13+-623CE4?logo=terraform)
 ![AWS](https://img.shields.io/badge/AWS-Cloud-orange?logo=amazonaws)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI-blue?logo=githubactions)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+
 ## Project Overview
 
-This project demonstrates the deployment of a secure and scalable AWS infrastructure using Terraform.
+This project demonstrates how to provision a production-inspired AWS landing zone using Terraform.
 
-The architecture follows Infrastructure as Code (IaC) principles and incorporates networking, compute, load balancing, auto scaling, monitoring, IAM, and managed database services while following AWS best practices.
+The infrastructure follows Infrastructure as Code (IaC) principles and implements secure networking, high availability, monitoring, web application protection, and automated infrastructure validation using GitHub Actions.
 
 ## Features
 
-- Custom VPC with Public and Private Subnets
-- Internet Gateway and NAT Gateway
-- Secure Security Groups
+- Custom Amazon VPC
+- Public & Private Subnets
+- Internet Gateway
+- NAT Gateway
+- Route Tables
+- Security Groups
+- IAM Roles & Instance Profiles
 - EC2 Launch Template
 - Application Load Balancer (ALB)
 - Auto Scaling Group
-- CloudWatch Scaling Policies
-- PostgreSQL RDS Database
-- IAM Roles and Instance Profiles
+- PostgreSQL RDS
+- AWS WAF Protection
+- CloudWatch Alarms
+- CloudWatch Dashboard
+- Remote Terraform State (Amazon S3)
+- Terraform State Locking (Amazon DynamoDB)
 - GitHub Actions CI Pipeline
 - Infrastructure as Code using Terraform
 
@@ -33,6 +41,16 @@ The architecture follows Infrastructure as Code (IaC) principles and incorporate
 ## Architecture
 
 ![AWS Architecture](pics/architecture.png)
+
+## Architecture Highlights
+
+- Internet-facing Application Load Balancer protected by AWS WAF
+- EC2 instances deployed in private subnets across multiple Availability Zones
+- Auto Scaling Group provides high availability and scalability
+- PostgreSQL RDS deployed in private subnets using an RDS DB Subnet Group
+- CloudWatch alarms and dashboards monitor infrastructure health
+- Terraform remote state stored securely in Amazon S3 with DynamoDB state locking
+- GitHub Actions automatically validates Terraform code on every push
 
 ## AWS Services Used
 
@@ -48,6 +66,29 @@ The architecture follows Infrastructure as Code (IaC) principles and incorporate
 - Security Groups
 - Terraform
 - GitHub Actions
+- AWS WAF
+- Amazon S3
+- Amazon DynamoDB
+
+## Monitoring
+
+CloudWatch provides operational visibility into the deployed infrastructure.
+
+The dashboard includes:
+
+- EC2 CPU Utilization
+- ALB Request Count
+- Healthy Host Count
+- RDS CPU Utilization
+
+## Security
+
+- AWS WAF protects the Application Load Balancer
+- EC2 instances are deployed in private subnets
+- PostgreSQL RDS is not publicly accessible
+- IAM Roles provide least-privilege access
+- Security Groups restrict inbound and outbound traffic
+- Terraform state is securely stored in Amazon S3
 
 ## CI/CD Pipeline
 
@@ -72,7 +113,6 @@ Enterprise-aws-secure-landing-zone
 │   └── workflows/
 │       └── terraform.yml
 │
-├── keys/
 │
 ├── terraform/
 │   ├── alb.tf
@@ -84,6 +124,10 @@ Enterprise-aws-secure-landing-zone
 │   ├── networking.tf
 │   ├── outputs.tf
 │   ├── provider.tf
+│   ├── backend.tf
+│   ├── dashboard.tf
+│   ├── versions.tf
+│   ├── waf.tf
 │   ├── security_groups.tf
 │   ├── variables.tf
 │   └── ...
@@ -98,8 +142,9 @@ Clone the repository
 
 ```bash
 git clone https://github.com/iizScareyy/Enterprise-aws-secure-landing-zone.git
+```
 
-Navigate to Terraform directory
+Navigate to the Terraform directory
 
 ```bash
 cd terraform
@@ -130,6 +175,7 @@ terraform apply
 ```
 
 
+
 ## Cleanup
 
 Destroy all infrastructure
@@ -143,4 +189,4 @@ terraform destroy
 **Shraddha**
 
 - AWS Certified Solutions Architect – Associate (SAA-C03)
-- GitHub: https://github.com/iizScareyy
+- GitHub: **https://github.com/iizScareyy**

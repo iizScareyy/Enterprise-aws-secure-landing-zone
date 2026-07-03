@@ -56,6 +56,20 @@ data "aws_iam_policy_document" "ec2_permissions" {
       "*"
     ]
   }
+  statement {
+
+    sid    = "SecretsManagerAccess"
+    effect = "Allow"
+
+    actions = [
+      "secretsmanager:GetSecretValue"
+    ]
+
+    resources = [
+      aws_secretsmanager_secret.db_secret.arn
+    ]
+
+  }
 }
 
 resource "aws_iam_policy" "ec2_policy" {
