@@ -1,22 +1,37 @@
+###############################################
+# EC2 Assume Role Policy
+###############################################
+
 data "aws_iam_policy_document" "ec2_assume_role" {
+
   statement {
+
     effect = "Allow"
 
+    actions = [
+      "sts:AssumeRole"
+    ]
+
     principals {
+
       type = "Service"
 
       identifiers = [
         "ec2.amazonaws.com"
       ]
+
     }
 
-    actions = [
-      "sts:AssumeRole"
-    ]
   }
+
 }
 
+###############################################
+# IAM Role
+###############################################
+
 resource "aws_iam_role" "ec2_role" {
+
   name = "enterprise-ec2-role"
 
   assume_role_policy = data.aws_iam_policy_document.ec2_assume_role.json
@@ -24,25 +39,21 @@ resource "aws_iam_role" "ec2_role" {
   tags = {
     Name = "enterprise-ec2-role"
   }
+
 }
+
+###############################################
+# Least Privilege IAM Policy
+###############################################
 
 data "aws_iam_policy_document" "ec2_permissions" {
 
-  statement {
-    sid    = "S3Access"
-    effect = "Allow"
-
-    actions = [
-      "s3:GetObject",
-      "s3:PutObject"
-    ]
-
-    resources = [
-      "*"
-    ]
-  }
+  ###############################################
+  # CloudWatch Logs
+  ###############################################
 
   statement {
+
     sid    = "CloudWatchLogs"
     effect = "Allow"
 
@@ -55,7 +66,13 @@ data "aws_iam_policy_document" "ec2_permissions" {
     resources = [
       "*"
     ]
+
   }
+
+  ###############################################
+  # Secrets Manager
+  ###############################################
+
   statement {
 
     sid    = "SecretsManagerAccess"
@@ -70,15 +87,25 @@ data "aws_iam_policy_document" "ec2_permissions" {
     ]
 
   }
+
 }
+
+###############################################
+# IAM Policy
+###############################################
 
 resource "aws_iam_policy" "ec2_policy" {
 
   name        = "enterprise-ec2-policy"
-  description = "Least privilege policy for application EC2"
+  description = "Least privilege IAM policy for application EC2 instances"
 
   policy = data.aws_iam_policy_document.ec2_permissions.json
+
 }
+
+###############################################
+# Attach Policy
+###############################################
 
 resource "aws_iam_role_policy_attachment" "ec2_policy_attachment" {
 
@@ -87,9 +114,14 @@ resource "aws_iam_role_policy_attachment" "ec2_policy_attachment" {
 
 }
 
+###############################################
+# Instance Profile
+###############################################
+
 resource "aws_iam_instance_profile" "ec2_profile" {
 
   name = "enterprise-ec2-profile"
 
   role = aws_iam_role.ec2_role.name
+
 }

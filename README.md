@@ -1,110 +1,163 @@
 # Enterprise AWS Secure Landing Zone
 
-A production-inspired AWS infrastructure built with Terraform following Infrastructure as Code (IaC) best practices.
-
-This project provisions a production-inspired AWS infrastructure featuring secure networking, load balancing, auto scaling, monitoring, AWS WAF protection, remote Terraform state management, and a PostgreSQL database using Infrastructure as Code (Terraform).
+A production-inspired AWS Landing Zone built with **Terraform**, implementing secure networking, identity and access management, encryption, monitoring, auditing, and web application protection following Infrastructure as Code (IaC) best practices.
 
 ![Terraform](https://img.shields.io/badge/Terraform-1.13+-623CE4?logo=terraform)
 ![AWS](https://img.shields.io/badge/AWS-Cloud-orange?logo=amazonaws)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-CI-blue?logo=githubactions)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
+---
 
-## Project Overview
+# Project Overview
 
-This project demonstrates how to provision a production-inspired AWS landing zone using Terraform.
+This project demonstrates how to design and provision a secure, production-inspired AWS environment using Terraform.
 
-The infrastructure follows Infrastructure as Code (IaC) principles and implements secure networking, high availability, monitoring, web application protection, and automated infrastructure validation using GitHub Actions.
+The infrastructure emphasizes cloud security, high availability, infrastructure automation, monitoring, auditing, and least-privilege access while following Infrastructure as Code (IaC) best practices.
 
-## Features
+---
+
+# Features
+
+### Networking
 
 - Custom Amazon VPC
-- Public & Private Subnets
+- Public & Private Subnets across multiple Availability Zones
 - Internet Gateway
 - NAT Gateway
 - Route Tables
 - Security Groups
-- IAM Roles & Instance Profiles
+
+### Compute & Availability
+
 - EC2 Launch Template
 - Application Load Balancer (ALB)
 - Auto Scaling Group
-- PostgreSQL RDS
-- AWS WAF Protection
-- CloudWatch Alarms
+
+### Database
+
+- Amazon RDS PostgreSQL
+- Private DB Subnet Group
+
+### Identity & Security
+
+- IAM Roles & Instance Profiles
+- Least-Privilege IAM Policies
+- AWS Secrets Manager
+- Customer Managed AWS KMS Key
+- AWS WAF
+  - AWS Managed Rules
+  - Known Bad Inputs Rule Set
+  - Amazon IP Reputation List
+  - Rate Limiting
+
+### Monitoring & Auditing
+
 - CloudWatch Dashboard
-- Remote Terraform State (Amazon S3)
-- Terraform State Locking (Amazon DynamoDB)
+- CloudWatch Alarms
+- VPC Flow Logs
+- AWS CloudTrail
+
+### Infrastructure Automation
+
+- Terraform Remote State (Amazon S3)
+- Terraform State Locking
 - GitHub Actions CI Pipeline
-- Infrastructure as Code using Terraform
 
+---
 
-## Architecture
+# Architecture
 
 ![AWS Architecture](pics/architecture.png)
 
-## Architecture Highlights
+---
 
-- Internet-facing Application Load Balancer protected by AWS WAF
-- EC2 instances deployed in private subnets across multiple Availability Zones
-- Auto Scaling Group provides high availability and scalability
-- PostgreSQL RDS deployed in private subnets using an RDS DB Subnet Group
-- CloudWatch alarms and dashboards monitor infrastructure health
-- Terraform remote state stored securely in Amazon S3 with DynamoDB state locking
-- GitHub Actions automatically validates Terraform code on every push
+# Architecture Highlights
 
-## AWS Services Used
+- Internet-facing Application Load Balancer protected by AWS WAF.
+- EC2 instances are deployed in private subnets behind the load balancer.
+- Auto Scaling provides high availability across Availability Zones.
+- PostgreSQL RDS is deployed privately and is inaccessible from the Internet.
+- Database credentials are securely stored in AWS Secrets Manager.
+- Customer-managed AWS KMS key encrypts sensitive resources.
+- AWS CloudTrail records API activity for auditing.
+- VPC Flow Logs capture network traffic for monitoring and troubleshooting.
+- CloudWatch Dashboard and Alarms provide operational visibility.
+- Terraform state is stored remotely in Amazon S3 with state locking.
+- GitHub Actions automatically validates Terraform code on every push and pull request.
 
-- Amazon VPC
-- Amazon EC2
-- Application Load Balancer
-- Auto Scaling Group
-- Amazon RDS PostgreSQL
-- CloudWatch
-- IAM
-- Internet Gateway
-- NAT Gateway
-- Security Groups
-- Terraform
-- GitHub Actions
-- AWS WAF
-- Amazon S3
-- Amazon DynamoDB
+---
 
-## Monitoring
+# Security Features
 
-CloudWatch provides operational visibility into the deployed infrastructure.
+This project implements several AWS security best practices:
 
-The dashboard includes:
+- Principle of Least Privilege using IAM Roles
+- Secrets stored securely in AWS Secrets Manager
+- Customer Managed KMS Encryption
+- Private EC2 instances
+- Private Amazon RDS
+- Security Group based network segmentation
+- Web Application Firewall (AWS WAF)
+- CloudTrail API auditing
+- VPC Flow Logs
+- Remote Terraform State
+
+---
+
+# Monitoring
+
+CloudWatch Dashboard includes:
 
 - EC2 CPU Utilization
 - ALB Request Count
 - Healthy Host Count
 - RDS CPU Utilization
 
-## Security
+CloudWatch Alarms automatically monitor infrastructure health and scaling metrics.
 
-- AWS WAF protects the Application Load Balancer
-- EC2 instances are deployed in private subnets
-- PostgreSQL RDS is not publicly accessible
-- IAM Roles provide least-privilege access
-- Security Groups restrict inbound and outbound traffic
-- Terraform state is securely stored in Amazon S3
+---
 
-## CI/CD Pipeline
+# CI/CD
 
-This project uses GitHub Actions to automatically validate Terraform code on every push and pull request.
+GitHub Actions automatically validates every infrastructure change.
 
-The pipeline performs:
+Pipeline stages:
 
-- Terraform Format Check (`terraform fmt -check`)
-- Terraform Initialization (`terraform init`)
-- Terraform Validation (`terraform validate`)
-- Terraform Execution Plan (`terraform plan`)
+- Terraform Format Check
+- Terraform Initialization
+- Terraform Validation
+- Terraform Execution Plan
 
-This ensures infrastructure changes are validated before deployment.
+This helps ensure infrastructure quality before deployment.
 
+---
 
-## Project Structure
+# AWS Services Used
+
+- Amazon VPC
+- Amazon EC2
+- Application Load Balancer
+- Auto Scaling Group
+- Amazon RDS PostgreSQL
+- AWS IAM
+- AWS WAF
+- AWS KMS
+- AWS Secrets Manager
+- AWS CloudTrail
+- Amazon CloudWatch
+- VPC Flow Logs
+- Amazon S3
+- Internet Gateway
+- NAT Gateway
+- Route Tables
+- Security Groups
+- Terraform
+- GitHub Actions
+
+---
+
+# Project Structure
 
 ```text
 Enterprise-aws-secure-landing-zone
@@ -113,30 +166,36 @@ Enterprise-aws-secure-landing-zone
 │   └── workflows/
 │       └── terraform.yml
 │
+├── backend-bootstrap/
+│   ├── provider.tf
+│   ├── versions.tf
+│   └── backend_resources.tf
 │
 ├── terraform/
 │   ├── alb.tf
-│   ├── autoscaling.tf
+│   ├── auto_scaling.tf
+│   ├── cloudtrail.tf
 │   ├── cloudwatch.tf
-│   ├── db.tf
+│   ├── dashboard.tf
 │   ├── ec2.tf
 │   ├── iam.tf
+│   ├── kms.tf
 │   ├── networking.tf
-│   ├── outputs.tf
-│   ├── provider.tf
-│   ├── backend.tf
-│   ├── dashboard.tf
-│   ├── versions.tf
+│   ├── rds.tf
+│   ├── secrets.tf
+│   ├── vpc_flow_logs.tf
 │   ├── waf.tf
-│   ├── security_groups.tf
-│   ├── variables.tf
+│   ├── backend.tf
 │   └── ...
+│
+├── pics/
 │
 └── README.md
 ```
 
+---
 
-## Deployment
+# Deployment
 
 Clone the repository
 
@@ -174,9 +233,9 @@ Deploy infrastructure
 terraform apply
 ```
 
+---
 
-
-## Cleanup
+# Cleanup
 
 Destroy all infrastructure
 
@@ -184,9 +243,28 @@ Destroy all infrastructure
 terraform destroy
 ```
 
-## Author
+---
+
+# Key Learning Outcomes
+
+This project demonstrates practical experience with:
+
+- Infrastructure as Code (Terraform)
+- Secure AWS Networking
+- IAM & Least Privilege Access
+- Secrets Management
+- Customer Managed Encryption (KMS)
+- Security Monitoring & Auditing
+- AWS WAF
+- High Availability
+- Infrastructure Automation
+- CI/CD for Terraform
+
+---
+
+# Author
 
 **Shraddha**
 
 - AWS Certified Solutions Architect – Associate (SAA-C03)
-- GitHub: **https://github.com/iizScareyy**
+- GitHub: https://github.com/iizScareyy

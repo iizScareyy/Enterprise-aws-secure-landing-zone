@@ -1,4 +1,10 @@
 ###############################################
+# Current AWS Region
+###############################################
+
+data "aws_region" "current" {}
+
+###############################################
 # Customer Managed KMS Key
 ###############################################
 
@@ -10,6 +16,7 @@ resource "aws_kms_key" "enterprise_key" {
   enable_key_rotation = true
 
   policy = jsonencode({
+
     Version = "2012-10-17"
 
     Statement = [
@@ -38,8 +45,29 @@ resource "aws_kms_key" "enterprise_key" {
         }
 
         Action = [
+          "kms:Encrypt",
           "kms:GenerateDataKey*",
           "kms:Decrypt",
+          "kms:DescribeKey"
+        ]
+
+        Resource = "*"
+      },
+
+      {
+        Sid = "AllowCloudWatchLogs"
+
+        Effect = "Allow"
+
+        Principal = {
+          Service = "logs.${data.aws_region.current.region}.amazonaws.com"
+        }
+
+        Action = [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
           "kms:DescribeKey"
         ]
 
@@ -47,6 +75,7 @@ resource "aws_kms_key" "enterprise_key" {
       }
 
     ]
+
   })
 
   tags = {
